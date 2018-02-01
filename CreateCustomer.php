@@ -1,18 +1,31 @@
 <?PHP
-
-include '../customer.php';
-include '../DAL/registerdataMapper.php';
-
-
+include 'customer.php';
+include 'registerdataMapper.php';
+include 'command1.php';
 try{
-  ///  if(isset($_POST['submit'])){
-        $customer = new Article( $_POST['Shwele'], $_POST['Lokwe'], $_POST['0785373131'], $_POST['1'], $_POST['30-12-2011'], $_POST['1'], $_POST['1'], $_POST['1'], $_POST['Sethucarter@gmail.com']);
+    if(isset($_POST['submit'])){
 
-        //$customer = new Article( $_POST['Firstname'], $_POST['Lastname'], $_POST['ContactNumber'], $_POST['AddressId'], $_POST['LastUpdate'], $_POST['AccountId'], $_POST['QuestionId'], $_POST['AnswerId'], $_POST['Email']);
+    $firstname = $_POST['FirstName'];
+    $Lastname = $_POST['LastName'];
+    $Contactnumber = $_POST['ContactNumber'];
+    $email = $_POST['Email'];
+    $password = $_POST['password'];
+
+    $timezone = date_default_timezone_get();
+
+    //$account =new account(1,0,0,$timezone,$email, $password);        
+         //$customer ="";
+         $account ="";
+        //$customer = new customer($firstname,$Lastname,$Contactnumber,1,$timezone,1,$email);
         $registration_datamapper = new registerdataMapper();
-        $registration_datamapper->Create($Customer);
-        header("refresh:2; url=articles.php");
-   // }
+        $registration_datamapper->CreateAccount($account);
+       // $registration_datamapper->Create($customer);
+        //header("refresh:2; url=index.php");
+    }
+    else{
+        echo "not saved";
+    }
+    
 }catch(PDOException $e){
     echo 'ERROR: '. "<br>" . $e->getMessage();
 }
@@ -20,3 +33,4 @@ try{
 
 
 ?>
+
