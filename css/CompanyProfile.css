@@ -1,0 +1,95 @@
+body {
+    margin: 0;
+}
+
+.top-div {
+    margin-top: 0;
+    width: 100%;
+    height: 20px;
+    background-size: 2500px;
+    background-attachment: fixed;
+}
+
+.wrapper {
+    margin: 0px;
+    font-family: 'Roboto', 'Times New Roman', 'georgia';
+}
+
+#hero-section {
+    padding: 20px 0;
+    margin-bottom: 50px;
+    background: #808080 url("https://yfwp2260wmb3b8wdx12drkyo-wpengine.netdna-ssl.com/wp-content/uploads/2015/04/BLOG_SubpageBanner.jpg") no-repeat top center;
+    height: 150px;
+    background-size: 2500px;
+    background-attachment: fixed;
+}
+
+center {
+    display: block;
+    text-align: center;
+}
+
+#userDescription {
+    border-radius: 500px;
+    display: block;
+    float: left;
+    margin: 8px 0 10px;
+}
+
+img {
+    border: 0;
+    vertical-align: middle;
+}
+
+.single-post {
+    margin-bottom: 100px;
+}
+
+div {
+    display: block;
+}
+
+#companyheader {
+    color: White;
+    font-family: Britannic;
+    margin-top: 0px;
+    padding-right: 50px;
+    text-align: center;
+    font-size: 70px;
+}
+
+.conatiner {
+    padding-right: 15px;
+    padding-left: 15px;
+    margin-right: auto;
+    margin-left: auto;
+}
+
+.vl {
+    border-left: 2px solid;
+    height: 500px;
+    border-color: black;
+    display: block;
+    text-align: center;
+    position: absolute;
+    left: 50%;
+    margin-left: -3px;
+    top: 250px;
+    height: 100%;
+    overflow: auto
+}
+
+#requestedservices {
+    background-color: lightblue;
+    width: 48%;
+    display: inline-block;
+    padding: 10px 10px 10px 10px;
+    font-size: 14px;
+    color: white;
+}
+
+.imgframe {
+    background: #D652D9;
+    padding: 12px;
+    border: 1px solid #999;
+}
