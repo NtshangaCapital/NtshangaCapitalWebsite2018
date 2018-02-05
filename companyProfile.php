@@ -1,4 +1,9 @@
 ﻿<!DOCTYPE html>
+<?php
+include_once "C:/xampp/htdocs/Ntshangacapital/dbConnection.php";
+include 'SessionCheck.php';
+include 'registerdataMapper.php';
+?>
 <html>
 <head>
     <meta charset="utf-8" />
@@ -7,6 +12,7 @@
 
 </head>
 <body>
+
         <div class="wrapper">
             <section id="hero-section" >
                         <h2 id="companyheader" >Company Profile Page</h3>
@@ -40,6 +46,11 @@
                                 innovative people & Business Experts.who are seeking to provide services to companies in need of them,we develop technology advanced systems that improve and assist companies in thei revenue.
                             </p>
                                  <br />
+                                 <?php
+
+
+
+                                 ?>
                                  <h2 id="requestedservices">Offered Services</h2><br />
                                  <div>
                                     <!--  <lable id="lblservice1">Offered Services</lable>-->
@@ -90,25 +101,33 @@
                                  <br />
                                  <div>
                                      <h3>Manager Name</h3><br />
-                                     <lable id="lblservice8">Siphosethu Lokwe</lable>
+                                    <!-- <lable id="lblservice8">Siphosethu Lokwe</lable>-->
+                                     <input class="Text" type="text" value="<?PHP echo $firstname; ?>" name="fn" size="19"/>
+
                                      <!-- <input id="service3" type="checkbox" name=" " />-->
                                  </div>
                                  <br />
                                  <div>
                                      <h3>Address Line 1</h3><br />
-                                     <lable id="lblservice6">2523 N.U1</lable>
+                                     <!--<lable id="lblservice6">2523 N.U1</lable>-->
+                                     <input class="Text" type="text" value="<?PHP echo $lastname; ?>" name="ln" size="19"/>
+
                                      <!--<input id="service4" type="checkbox" name=" " />-->
                                  </div>
                                  <br />
                                  <div>
                                      <h3>Address Line 2</h3><br />
-                                     <lable id="lblservice10"> </lable>
+                                     <!--<lable id="lblservice10"> </lable>-->
+                                     <input class="Text" type="text" value="<?PHP echo $phone; ?>" name="cn" size="19"/>
+
                                      <!-- <input id="service5" type="checkbox" name=" " />-->
                                  </div>
                                  <br />
                                  <div>
                                      <h3>Email Address</h3><br />
-                                     <lable id="lblservice11">SethuCarter@gmail.com</lable>
+                                     <!--<lable id="lblservice11">SethuCarter@gmail.com</lable>-->
+                                     <input class="Text" type="text" value="<?PHP echo $email; ?>" name="em" size="19"/>
+
                                      <!--<input id="service6" type="checkbox" name=" " />-->
                                  </div>
                                  <br />
@@ -127,7 +146,11 @@
          
 
 
-
+ <script>
+if(empty($_POST['agree']) || $_POST['agree'] != 'agree') {
+echo 'Please indicate that you have read and agree to the Terms and Conditions and Privacy Policy';
+}
+</script>
         
 
 </body>

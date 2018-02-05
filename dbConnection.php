@@ -10,7 +10,7 @@ class Connection{
         $pdo->setAttribute(PDO::ATTR_DEFAULT_FETCH_MODE, PDO::FETCH_OBJ);
         return $pdo;
     }
-    
+   
 } 
-
+$dsn->lastInsertedId();
 ?> 
