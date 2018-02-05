@@ -1,135 +1,80 @@
 <?php
- class customer{
+
+class Customer{
     var $Id;
+    var $AccountId;
     var $FirstName;
     var $LastName;
-    var $ContactNumber;
+    var $Phone;
     var $AddressId;
-    var $Lastupdate;
-    var $AccountId;
     var $Email;
-    //var $QuestionId;
-    //var $AnswerId;
+    var $LastUpdate;
 
-
- public function _Constructor($param_Id,$param_FirstName,$param_LastName,$param_ContactNumber,$param_Email,$param_AddressId,$param_Lastupdate,$param_Accountid)//$param_QuestionId,$param_AnswerId)
- {
-     
-     $this->Id =$param_Id ;
-     $this->Firstname = $param_FirstName;
-     $this->LastName=$param_LastName ;
-     $this->ContactNumber =$param_ContactNumber;
-     $this->Email = $param_Email;
-     $this->Address = $param_AddressId;
-     $this->Lastupdate =$param_Lastupdate ;
-     $this->Accountid=$param_Accountid ;
-    // $this ->QuestionId =$param_QuestionId ; 
-    //$this ->AnswerId =$param_AnswerId ;
-     
-
-
- }
-
-
-
-    public function setId($param)
-    {
-        $this->Id=$param;
+    public function __construct($Id, $AccountId, $FirstName, $LastName, $Phone, $AddressId, $Email){
+        $this->Id = $Id;
+        $this->AccountId = $AccountId;
+        $this->FirstName = $FirstName;
+        $this->LastName = $LastName;
+        $this->Phone = $Phone;
+        $this->AddressId = $AddressId;
+        $this->Email = $Email;
     }
 
-    public function getId($param)
-    {
+    public function getId(){
         return $this->Id;
     }
-
-
-    public function setFirstname($param)
-    {
-        $this ->Firstname=$param;
-    }
-    public function getfirstname($param)
-    {
-        return $this->Firstname;
-    }
-   
- public function setLastname($param)
- {
-     $this->LastName=$param;
- }
- 
- 
-
- public function getLastname($param)
- {
-     return $this->LastName;
- }
-
-
- public function setContactnumber($param)
- {
-     $this->Contactnumber=$param;
- }
- public function getContactnumber($param)
- {
-     return $this->Contactnumber;
- }
-
- public function setEmail($param)
- {
-     $this->email=$param;
- }
- public function getEmail($param)
- {
-     return $this->Email;
- }
-
- public function setAddress($param)
- {
-     $this->Address=$param;
- }
- public function getAddress($param)
- {
-     return $this->Address;
- }
-
- public function setLastupdate($param)
- {
-     $this->Lastupdate=$param;
- }
- public function getLastupdate($param)
- {
-     return $this->Lastupdate;
- }
- public function setAccountid($param)
- {
-     $this->Accountid=$param;
- }
- public function getAccountid($param)
-    {
-        return $this->Accountid;
+    public function setId($param){
+        $this->Id = $param;
     }
 
-  //  public function setQuetionId($param)
-   // {
-   //     $this->QuestionId=$param;
-  //  }
+    public function getAccountId(){
+        return $this->AccountId;
+    }
+    public function setAccountId($param){
+        $this->AccountId = $param;
+    }
 
-    //public function getQuestionId($param)
-   // {
-  //      return $this->QuestionId;
-  //  }
-   // public function setAnswerId($param)
-  //  {
-  //      $this-$AnswerId=$param;
-  //  }
+    public function getFirstName(){
+        return $this->FirstName;
+    }
+    public function setFirstName($param){
+        $this->FirstName = $param;
+    }
 
-  //  public function getAnswerId($param)
-  //  {
-   //     return $this->AnswerId;
- //   }
+    public function getLastName(){
+        return $this->LastName;
+    }
+    public function setLastName($param){
+        $this->LastName = $param;
+    }
 
+    public function getPhone(){
+        return $this->Phone;
+    }
+    public function setPhone($param){
+        $this->Phone = $param;
+    }
 
+    public function getAddressId(){
+        return $this->AddressId;
+    }
+    public function setAddressId($param){
+        $this->AddressId = $param;
+    }
 
+    public function getEmail(){
+        return $this->Email;
+    }
+    public function setEmail($param){
+        $this->Email = $param;
+    }
+    
+    public function getLastUpdate(){
+        return $this->LastUpdate;
+    }
+    public function setLastUpdate($param){
+        $this->LastUpdate = $param;
+    }
 }
 
 
