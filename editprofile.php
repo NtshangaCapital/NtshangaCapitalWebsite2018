@@ -45,7 +45,7 @@ $username = $_SESSION["username"];
             padding: 20px 0;
             margin-bottom: 50px;
             background: #808080 url("https://yfwp2260wmb3b8wdx12drkyo-wpengine.netdna-ssl.com/wp-content/uploads/2015/04/BLOG_SubpageBanner.jpg") no-repeat top center;
-            height: 150px;
+            height: 170px;
             background-size: 2500px;
             background-attachment: fixed;
         }
@@ -131,22 +131,19 @@ $username = $_SESSION["username"];
                             <img src="images/logo/logo_white.png" width="200" alt="Logo">
                         </a>
                     </div>
-        </div>
+        
    
         <section id="hero-section">
             <h2 id="companyheader"><?php  
             if (isset($_SESSION["username"]))
             {
-                echo 'Successfully logged in'.$_SESSION["username"];
+                echo 'Welcome '.$_SESSION["username"];
             }
             ?> </h2>
         </section>
 
         <div class="container">
             <div class="row">
-
-
-
                 <div class=" col-sm-8 col-xs-12">
 
                     <div class="single-post">
@@ -244,7 +241,7 @@ $username = $_SESSION["username"];
                     </center>
                 </div>
             </div>
-
+         </div>
 
         </div>
 
