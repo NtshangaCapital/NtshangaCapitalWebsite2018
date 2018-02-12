@@ -21,7 +21,7 @@ include ('models/DAL/CustomerDataMapper.php');
 ?>
 
 <?php
-if(isset($_POST['signin'])){
+if(!isset($_POST['signin'])){
     header('Location: login.html');
 }
 
@@ -57,10 +57,12 @@ if($msg != ''){
             // Check if is confirmed
             if(!$acc_datamapper->IsConfirmed($email, $Conn, $Comm))
             { 
+
                 $_SESSION['userid'] = $acc_datamapper->GetAccountId($email, $Conn, $Comm);
                 $_SESSION['userconfirm'] = $email;                
                 $msg = $msg.'confirm=Please confirm your account!';
                 header('Location: confirmaccount.php?'.$msg);
+                
             }
             else
             {
@@ -73,7 +75,7 @@ if($msg != ''){
                 else
                 {
                     // Check if password is correct
-                    if(PasswordMatch($email, $password, $Conn, $Comm))
+                    if($acc_datamapper->PasswordMatch($email, $password, $Conn, $Comm))
                     { 
                         // TODO: Redirect to profile
                         $_SESSION['user'] = $email;
