@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="en">	
+    <head>
+		<meta charset="UTF-8">
+		<!-- For IE -->
+		<meta http-equiv="X-UA-Compatible" content="IE=edge">
+
+		<!-- For Resposive Device -->
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+        <title>Find Account</title>
+        <!-- Favicon -->
+		<link rel="icon" type="image/png" sizes="56x56" href="images/fav-icon/icon.png">
+        <link rel="stylesheet" type="text/css" href="css/style1.css">
+        <script type="text/javascript" src="vendor/jquery.2.2.3.min.js"></script>
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.0/jquery.min.js"></script>
+        <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+        <script type="text/javascript" src="js/v.js"></script>
+        <script>
+            // RSS JS
+            $(document).ready(function() { 
+                ConnectToRSS('NBC');
+            });
+            function ConnectToRSS(str){
+                if (str.length==0) { 
+                    document.getElementById("rssOutput").innerHTML="";
+                    return;
+                }
+                var spanprogress = document.getElementById('spanprogress');
+                
+                $.ajax({
+                    xhr: function () {
+                        var xhr;
+                        if (window.XMLHttpRequest) {
+                            // code for IE7+, Firefox, Chrome, Opera, Safari
+                            xhr = new XMLHttpRequest();
+                        } else {  // code for IE6, IE5
+                            xhr = new ActiveXObject("Microsoft.XMLHTTP");
+                        }
+                        return xhr;
+                    },
+                    url: "news.php?q="+str,
+                    type: "GET",
+                    error: function (data) {
+                        if (data.status === 0) {
+                            spanprogress.innerHTML = '<span style="font-size:200%;color:#777;">Failed to connect to server.</span>';
+                        } else {
+                            spanprogress.innerHTML = '<span style="font-size:200%;color:#777;">Unknown error has occured, please try again later.</span>';
+                        }
+                    },
+                    beforeSend: function () {
+                        spanprogress.innerHTML = '<span style="font-size:200%;color:#777;">Loading...</span>';
+                    },
+                    data: {},
+                    // processData: false,
+                    // contentType: false,
+                    success: function (data) {
+                        spanprogress.innerHTML = '';
+                        document.getElementById("rssOutput").innerHTML = data;
+                    }
+                });
+            }
+        </script>
+    </head>
+<body style="background-color:#f7f7f7;">
+
+<form>
+</form>
+<div>
+    <span id="spanprogress"></span>
+</div>
+<div id="rssOutput"></div>
+</body>
+</html>
