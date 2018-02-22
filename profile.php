@@ -1,66 +1,74 @@
 <?php
 Session_Start();
+session_id();
+
 if(!isset($_SESSION['user'])){
     header('Location: Login.html');
 }
 
-
-?>
-<!DOCTYPE html>
-<?php 
-//include ('models/customer');
 include ('models/DAL/Connection.php');
 include ('models/DAL/Command.php');
 include ('models/DAL/CustomerDataMapper.php');
-$username = $_SESSION['user'];
+?>
 
+<?php 
+
+$username = $_SESSION['user'];
+$Email = $_SESSION['user'];
 
 $Conn = new Connection();
 $Comm = new Command();
+$validate = new validate();
 
 $custusername_datamaper = new CustomerDataMapper();
-//$validate  =  new validate();
-// if($custusername_datamaper->GetCustomerbyUsername($username, $Conn, $Comm))
-// {
-//     $Customerusername = $custusername_datamaper->GetCustomerbyUsername();
-// }
-$list = $custusername_datamaper->GetCustomerbyUsername($username,$Conn, $Comm);
-$name ='';
-$lastname ="";
-$contactnumber="";
-$email ="";
+$results = $custusername_datamaper->GetCustomerbyUsername($username,$Conn, $Comm);
 
-while ($row = $list)
+$_fname;
+$_lname;
+$_contactno;
+$_email;
+foreach($results as $result)
 {
-  echo ' <div class="textboxes">
-  <h3>First Name
-  </h3>
-</div>
-<br />
-<div class="textboxes">
-  <!-- <lable id="lblservice8">Siphosethu Lokwe</lable> -->
-  <input id="custname" type="text" name=" " class="form-control" value ="'.$row['FirstName']. '" />
-</div>
-<br />
-<h3>Last Name</h3><br />
-<div class=textboxes>
-  <input id=lastname type=text name= class=form-control value ="'. $row['LastName'].'" />
-</div>
-<br />
-<h3>Contact Number</h3><br />
-<div class=textboxes>
-  <!-- <lable id=lblservice10> </lable> -->
-  <input id=contactnumber type=text  class=form-control value =" ' .$row['ContactNumber'].'" />
-</div>
-<br />
-<h3>Email Address</h3><br />
-<div class=textboxes>
-  <!-- <lable id=lblservice11>SethuCarter@gmail.com</lable> -->
-  <input id=emailaddress type=text  class=form-control value ="'. $row['Email'].'" />
-</div>;
-  
+    $_fname = $result->FirstName;
+    $_lname = $result->LastName;
+    $_contactno = $result->ContactNumber;
+    $_email = $result->Email;
 }
+
+    if(isset($_POST["btnUpdate"]))
+    {
+        $FirstName = $validate->GetFirstName();
+        $LastName = $validate->GetLastName();
+        $ContactNumber = $validate->GetContactNumber();
+        $email = $validate->GetEmail();
+        $UpdateUser = $custusername_datamaper->UpdateUserDetails($username,$Conn,$Comm,$FirstName,$LastName,$ContactNumber,$Email);
+    }
+    else{
+        // echo "".$_POST['FirstName'];
+        echo "data not updated";
+    }
+class Validate{
+    
+    public function __construct(){
+
+    }
+    public function GetFirstName(){
+        return filter_var($_POST["fname"], FILTER_SANITIZE_STRING);
+    }
+    public function GetLastName(){
+        return filter_var($_POST["lname"], FILTER_SANITIZE_STRING);
+    }
+    public function GetEmail(){
+        return filter_var($_POST["Email"], FILTER_SANITIZE_EMAIL);
+    }
+    public function GetContactNumber(){
+        return filter_var($_POST["phone"],FILTER_SANITIZE_STRING);
+    }
+}
+
 ?>
+
+<!DOCTYPE html>
 <html>
 <head>
     <meta charset="utf-8" />
@@ -68,6 +76,13 @@ while ($row = $list)
     <meta charset="UTF-8">
     <!-- For IE -->
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <!-- <link rel="icon" type="image/png" sizes="56x56" href="images/fav-icon/icon.png"> -->
+
+
+<!-- Main style sheet -->
+<link rel="stylesheet" type="text/css" href="css/style.css"> 
+<!-- responsive style sheet -->
+<!-- <link rel="stylesheet" type="text/css" href="css/responsive.css"> -->
 
     <!-- For Resposive Device -->
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -155,8 +170,8 @@ while ($row = $list)
         }
         
         .vl {
-            border-left: 2px solid;
-            border-color: black;
+            /* border-left: 2px solid;
+            border-color: black; */
             display: block;
             text-align: center;
             position: absolute;
@@ -164,7 +179,7 @@ while ($row = $list)
             margin-left: -3px;
             top: 450px;
             height: 100%;
-            overflow: auto 
+            /* overflow: auto  */
         }
         
         #requestedservices {
@@ -174,6 +189,13 @@ while ($row = $list)
             padding: 10px 10px 10px 10px;
             font-size: 14px;
             color: white;
+        }
+        #btneditDetails{
+            background-color: lightgreen;
+
+        }
+        #editImage{
+            padding-left:220px;
         }
         
         .imgframe {
@@ -187,21 +209,43 @@ while ($row = $list)
 <body>
     <div class="wrapper">
         <div class="div-label-span div-margin-bottom-5px">
+           
             <!-- Logo -->
-            <div class="logo float-left tran4s" style="background-color:#00d747;margin-top:-20px;padding:2%;">
-                <a href="index.html">
-                    <img src="images/logo/logo_white.png" width="200" alt="Logo">
-                </a>
+            <nav class="collapse navbar-collapse" style="background-color:#00d747;margin-top:-20px;padding:2%;">
+            <div class="navbar-header">
+                            <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar-collapse-1" aria-expanded="false">
+						       <span class="sr-only">Toggle navigation</span>
+						       <span class="icon-bar"></span>
+						       <span class="icon-bar"></span>
+						       <span class="icon-bar"></span>
+						     </button>
+                        </div>
+            <div class="container-fluid">
+         
+    <ul class="nav navbar-nav navbar-right">
+          <li><a href="#">Home</a></li>
+          <li><a href="#">About</a></li>
+          <li><a href="#">Service</a></li>
+          <li><a href="#">Companies</a></li>
+          <li><a href="#">Contact</a></li>
+      <li><a href="#"><span class="glyphicon glyphicon-log-in"></span> Login</a></li>
+    </ul>
+            
             </div>
-
+            <div class="logo float-left tran4s" style="margin-top:-20px;">
+                        <a href="index.html"><img src="images/logo/logo_white.png" width="200" alt="Logo"></a>
+                    </div>
+            <!-- <a href="index.html">
+                    <img src="images/logo/logo_white.png" width="200" alt="Logo">
+                </a> -->
+            </nav>
 
             <section id="hero-section">
                 <h2 id="companyheader">
                     <?php  
-            if (isset($_SESSION['user']))
-            {
+           
                 echo 'Welcome '.$_SESSION['user'];
-            }
+            
             ?> </h2>
             </section>
 
@@ -219,13 +263,11 @@ while ($row = $list)
 
                             <div>
                                 <div class="vl">
-                                    <img alt=" " src="images/logo.png" height="60" width="60" class=" imgframe" />
+                                    <!-- <img alt=" " src="images/logo.png" height="60" width="60" class=" imgframe" /> -->
                                     <div id="companydescription">
-                                        <h3>Company Name</h3>
 
                                     </div><br />
                                     <p>
-                                        campany description We are a dynamic team of creative and innovative people & Business Experts.who are seeking to provide services to companies in need of them,we develop technology advanced systems that improve and assist companies in thei revenue.
                                     </p>
                                     <br />
                                     <h2 id="requestedservices">Offered Services</h2><br />
@@ -277,30 +319,53 @@ while ($row = $list)
                                    -->
                                     <br />
                                     <div class="textboxes">
-                                        <h3>First Name
-                                        </h3>
+                                        <h2>First Name
+                                        </h2>
                                     </div>
                                     <br />
                                     <div class="textboxes">
-                                        <!-- <lable id="lblservice8">Siphosethu Lokwe</lable> -->
-                                        <input id="custname" type="text" name=" " class="form-control" value ="<?php echo $row['FirstName']  ?>" />
+                                    <div>
+                                    <?php  echo $_fname  ?>
+                                    </div>
+                                     
                                     </div>
                                     <br />
-                                    <h3>Last Name</h3><br />
+                                    <h2>Last Name</h2><br />
                                     <div class="textboxes">
-                                        <input id="lastname" type="text" name=" " class="form-control" value ="<?php echo  $row['LastName'] ?>" />
+                                    <div>
+                                    <?php echo $_lname?>
+                                    </div>
                                     </div>
                                     <br />
-                                    <h3>Contact Number</h3><br />
+                                    <h2>Contact Number</h2><br />
                                     <div class="textboxes">
-                                        <!-- <lable id="lblservice10"> </lable> -->
-                                        <input id="contactnumber" type="text" name=" " class="form-control" value ="<?php  echo  $row['ContactNumber'] ?>" />
+                                    <div>
+                                    </div>
+                                    <?php 
+                                        
+                                        if(empty($_contactno))
+                                        {
+                                            echo "Please update Number";
+                                        }
+                                        else
+                                        echo $_contactno
+                                        
+                                        ?>
+                                        <!-- <lable id="lblservice10"> </lable>  -->
+                                        <!-- <input id="contactnumber" type="text" name=" " class="form-control" value ="" readonly /> -->
                                     </div>
                                     <br />
-                                    <h3>Email Address</h3><br />
+                                    <h2>Email Address</h2><br />
                                     <div class="textboxes">
-                                        <!-- <lable id="lblservice11">SethuCarter@gmail.com</lable> -->
-                                        <input id="emailaddress" type="text" name=" " class="form-control" value ="<?php echo $row['Email'] ?>" />
+                                    <?php  echo $_email ?>
+                                    <br/>
+                                    <br/>>
+                                    <!-- <input id="emailaddress" type="text" name=" " class="form-control" value =""  readonly/> -->
+  <div class="div-margin-bottom-5px">
+<input id="btneditDetails" type="submit" class="btnStyle btnWidth" value="Update" name="UpdateDetails" data-toggle="modal" data-target=".RegistrationModal" data-wow-delay="0.3s" />
+</div>
+                                         <!-- <lable id="lblservice11">SethuCarter@gmail.com</lable>  -->
+
                                     </div>
                                     <br />
                                 </div>
@@ -315,7 +380,50 @@ while ($row = $list)
     </div>
 
     </div>
+<div>
+<div class="modal fade RegistrationModal theme-modal-box" role="dialog">
+            <div class="modal-dialog">
+                <!-- Modal content-->
+                <div class="modal-content">
+                    <div class="modal-body">
+                        <h3>Edit your Details</h3>
+                       
+                        <form id="btnUpdate" action="profile.php" method="POST">
+                            <div id="editImage">
+                            <img alt=" "  src="images/pencil.png" height="60" width="60"  /> 
+                            </div>
+                            <br/>
+                            <br/>
+                            <div class="wrapper">
+                                <input type="text" id="username" required placeholder="Username or Email" name="fname" class="form-control" value="<?php echo $_fname ?>">
+                                <input type="text" id="username" required placeholder="Username or Email" name="lname" class="form-control" value =" <?php echo $_lname?> ">
+                                <input type="text" id="username" required placeholder="Username or Email" name="phone" class="form-control" value ="  <?php 
+                                        
+                                        if(empty($_contactno))
+                                        {
+                                            echo "Please update Number";
+                                        }
+                                        else
+                                        echo $_contactno
+                                        
+                                        ?> ">
+                                <input type="text" id="username" required placeholder="Username or Email" name="Email" class="form-control" value =" <?php  echo $_contactno ?> ">
+                                <ul class="clearfix">
+                                  
+                                </ul>
+                                <button class="p-bg-color hvr-trim-two" id="btnUpdate" action="profile.php " name = "btnUpdate" >Submit</button>
+                            </div>
+                        </form>
+                    </div>
+                    <!-- /.modal-body -->
+                </div>
+                <!-- /.modal-content -->
+            </div>
+            <!-- /.modal-dialog -->
+        </div>
+        <!-- /.signUpModal -->
 
+</div>
 
 
 
