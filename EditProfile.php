@@ -14,7 +14,7 @@ include ('models/DAL/CustomerDataMapper.php');
 <?php 
 
 $username = $_SESSION['user'];
-$Email = $_SESSION['user'];
+// $Email = $_SESSION['user'];
 
 $Conn = new Connection();
 $Comm = new Command();
@@ -22,13 +22,15 @@ $validate = new validate();
 
 $custusername_datamaper = new CustomerDataMapper();
 $results = $custusername_datamaper->GetCustomerbyUsername($username,$Conn, $Comm);
-
+// $id  = $custusername_datamaper-> GetCustomerID($username,$Conn, $Comm);
+$_Id;
 $UpdateUser;
 $_fname;
 $_lname;
 $_contactno;
 $_email;
 $_lastupdate;
+$image_data;
 
 foreach($results as $result)
 {
@@ -37,16 +39,20 @@ foreach($results as $result)
     $_contactno = $result->ContactNumber;
     $_email = $result->Email;
     $_lastupdate = $result->LastUpdate;
+    $image_data = $result->ProfilePicture;
 }
+
 
     if(isset($_POST["btnUpdate"]))
     {
+
         $FirstName = $validate->GetFirstName();
         $LastName = $validate->GetLastName();
         $ContactNumber = $validate->GetContactNumber();
         $email = $validate->GetEmail();
-        $UpdateUser = $custusername_datamaper->UpdateUserDetails($Conn,$Comm,$FirstName,$LastName,$ContactNumber,$Email);
-        header("Location: profile.php");
+        $UpdateUser = $custusername_datamaper->UpdateUserDetails($Conn,$Comm,$FirstName,$LastName,$ContactNumber,$email);
+       
+         header("Location: profile.php");
     }
     else{
     //      echo '<div class="alert">
@@ -54,7 +60,51 @@ foreach($results as $result)
     //         <strong>Danger!</strong> Something went wrong while updating please try again after 5 minutes.
     //    </div>';
         }
-    
+
+
+//Update Customer Profile Picture
+        if(isset($_POST["btnimage"]))
+        {
+    //         if (!isset($_FILES['fileToUpload']['tmp_name']))
+    //         {
+    //  echo '<div class="alert">
+    //          <span class="closebtn" onclick="this.parentElement.style.display=none;">&times;</span> 
+    //       <strong>Danger!</strong> Something went wrong while updating please try again after 5 minutes.
+    //    </div>';      
+       
+    //    }
+
+        $Email = $_email;
+        $ProfilePircture = file_get_contents($_FILES['fileToUpload']['tmp_name']);
+        if(empty($ProfilePicture))
+        {
+           throw new Exception('picture needs to be selected');
+        }
+        $UpdatePicture = $custusername_datamaper->UpdateUserProfilePicture($Conn,$Comm,$Email,$ProfilePircture);
+      
+           if($UpdatePicture)
+           {
+             header("Refresh:0; url=EditProfile.php");
+              
+            }
+         else{
+            echo '<div class="alert">
+            <span class="closebtn" onclick="this.parentElement.style.display=none;">&times;</span> 
+         <strong>Danger!</strong> Something went wrong while updating please try again after 5 minutes.
+      </div>';         
+         }
+        } 
+        else
+            {
+               
+                echo"you need to select file";
+                    
+            }
+
+       
+            
+                       
+        
    
 class Validate{
     public function __construct(){
@@ -70,6 +120,9 @@ class Validate{
     }
     public function GetContactNumber(){
         return filter_var($_POST["contactno"],FILTER_SANITIZE_STRING);
+    }
+    public function GetPictutre(){
+        return filter_var($_FILES["fileToUpload"],FILTER_SANITIZE_BLOB);
     }
 }
 
@@ -141,7 +194,7 @@ class Validate{
       <div class="col-md-5  toppad  pull-right col-md-offset-3 ">
         <A href="edit.html" >Logout</A>
        <br>
-<p class=" text-info"> <?php echo date('y/m/d') ?> </p>
+<p class=" text-info"> <?php echo date('d M Y ') ?> </p>
       </div>
         <div class="col-xs-12 col-sm-12 col-md-6 col-lg-6 col-xs-offset-0 col-sm-offset-0 col-md-offset-3 col-lg-offset-3 toppad" >
    
@@ -152,9 +205,20 @@ class Validate{
             </div>
             <div class="panel-body">
               <div class="row">
-                <div class="col-md-3 col-lg-3 " align="center"> <img alt="User Pic" src="" class="img-circle img-responsive"> </div>
+                <div   align="center"> <img alt="User Pic" src="data:image/jpeg;base64,<?php  echo base64_encode( $image_data); ?>" class="img-circle img-responsive" width ="250px"  />
+
+             
+<div>
+<form id="updateProfilePicture " action ="EditProfile.php " method ="post" enctype="multipart/form-data">
+<input type="file" name="fileToUpload" id="fileToUpload">
+</div>
+<br/>
+            <input type ="submit" class="btn btn-warning" id="btnimage" name ="btnimage" value ="Change image" >
+            </form>
+              </div>
+              <br/>
                 
-                <form id ="UpdateDetailss"    action ="editProfile.php "  method="post">
+                <form id ="UpdateDetails"    action ="editProfile.php "  method="post">
                 <div class=" col-md-9 col-lg-9 "> 
                    
                   <table class="table table-user-information">
@@ -169,7 +233,7 @@ class Validate{
                       </tr>
                       <tr>
                         <td>Contact Number</td>
-                        <td>     <input type ="text" value ="<?php if(empty($_contactno))
+                        <td> <input type ="text" value ="<?php if(empty($_contactno))
                          {
                              echo "Please update Number";
                          }
@@ -179,11 +243,11 @@ class Validate{
                           </td>
                       </tr>
                    
+                      </tr>
                          <tr>
                              <tr>
                         <td>Email</td>
                         <td>      <input type ="text" value ="<?php  echo $_email ?> "  name ="Email" >  </a></td>
-                      </tr>
                         <tr>
                         <!-- <td>Home Address</td>
                         <td> <?php  echo $_email ?> </td> -->
@@ -199,8 +263,10 @@ class Validate{
                       </tr> 
                      
                     </tbody>
+
                   </table>
                   <input  id = "btnUpdate" type ="submit" class="btn btn-warning" value = "Save Cahnges" name = "btnUpdate">
+
                 </div>
                 </form>
               </div>
@@ -242,6 +308,8 @@ function myFunction() {
      window.location.href = 'profile.php';
 
 }
+
+
 </script> -->
 </body>
 </html>
