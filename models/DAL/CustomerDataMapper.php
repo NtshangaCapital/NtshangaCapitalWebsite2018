@@ -1,8 +1,11 @@
 <?PHP
-// include ('connection.php');
-// include ('command.php');
+//session_start();
+//$username = $_SESSION['username'];
+?>
 
+<?php
 class CustomerDataMapper{
+
     public function __construct(){
 
     }
@@ -21,8 +24,88 @@ class CustomerDataMapper{
                 return $Conn->lastInsertId();
         }catch(PDOException $e){
             echo 'ERROR: ' ."<br>" . $e->getMessage();
-            return 0;
+            return null;
+        }
+
+    }
+    
+    public function GetCustomerbyUsername($username,$Conn,$Comm){
+        try{
+
+            $stmt = $Conn->Connect()->prepare($Comm->SqlSelectCustomerByusername);
+              $stmt->bindParam(1, $username, PDO::PARAM_STR);
+              $stmt->execute();
+              return $stmt->fetchAll();
+        }catch(PDOException $e){
+            $Error = new errorlogger();
+            echo $e->getMessage();
+            $Error->GetErrorInfo($e->getMessage());
+            return null;
+        }
+        finally{
+            
         }
     }
+           
+    public function UpdateUserDetails($Conn,$Comm,$FirstName,$LastName,$ContactNumber,$Email)
+    {
+        try{
+            $stmt = $Conn->Connect()->prepare($Comm->SqlUpdateCustomerByUsername);
+                  $stmt->bindValue(1, $FirstName, PDO::PARAM_STR);
+                  $stmt->bindValue(2, $LastName, PDO::PARAM_STR);
+                  $stmt->bindValue(3, $ContactNumber, PDO::PARAM_STR);
+                  $stmt->bindValue(4, $Email, PDO::PARAM_STR);
+                  $stmt->bindValue(5, $Email, PDO::PARAM_STR);
+                   
+                  $stmt->execute();
+                 return true;
+        }catch(PDOException $e)
+        {
+              $Error = new errorlogger();
+             echo $e->getMessage();
+             $Error->GetErrorInfo($e->getMessage());
+             return false;
+            }
+        finally{
+
+
+
+        }
+    }
+    public function UpdateUserProfilePicture($Conn,$Comm,$Email,$ProfilePicture)
+    {
+        try{
+            $stmt = $Conn->Connect()->prepare($Comm->SqlCustomerProfilePic);
+            $stmt->bindValue(1, $ProfilePicture, PDO::PARAM_LOB);
+            $stmt->bindValue(2, $Email, PDO::PARAM_STR);
+            $stmt->execute();
+            return true;
+        }catch(PDOException $e)
+        {
+            $Error = new errorlogger();
+             echo $e->getMessage();
+            $Error->GetErrorInfo($e->getMessage());
+             return null;
+     
+        }
+    }
+
+
+
+    // public function GetCustomerID($Conn,$Comm,$username)
+    // {
+    //     try{
+    //             $stmt = $Conn->Connect()->prepare($Comm->SqlCustomerID);
+    //             $stmt->bindParam(1, $username, PDO::PARAM_STR);
+    //             $stmt->execute();
+    //             return $stmt->fetch();
+
+    //     }catch(PDOException $e)
+    //     {l;
+    //     }
+    // }
+    //             return nul
+    
+
 }
 ?>
