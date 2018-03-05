@@ -22,10 +22,11 @@ include 'command.php';
             $EmployeeDataMapper = new EmployeeDataMapper();
             $employee = new Employees($employeeId,$firstname,$lastname,$emplNo,$email,$Cellphone,$accountId,$addressId,$lastUpdated);
             $EmployeeDataMapper->Create($employee,$Conn,$Comm);
-            // if(isset($EmployeeDataMapper))
-            // {
-            //     echo("Employee detail successfully inserted");
+            if(isset($EmployeeDataMapper))
+            {
+                echo("Employee detail successfully inserted");
            }
+        }
 
          
     
