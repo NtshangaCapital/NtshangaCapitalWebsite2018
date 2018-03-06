@@ -11,8 +11,7 @@ if(isset($_SESSION['user'])){
 }
 ?>
 <?php
-include ('models/DAL/Connection.php');
-include ('models/DAL/Command.php');
+include ('db_init.php');
 include ('models/account.php');
 include ('models/customer.php');
 include ('models/DAL/AccountDataMapper.php');
