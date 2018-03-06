@@ -11,11 +11,11 @@
 
 <?php
 
-include ('connection.php');
-include ('command.php');
-include ('vacancy.php');
+include ('models/DAL/connection.php');
+include ('models/DAL/command.php');
+include ('models/vacancy.php');
 include ('models/customer.php');
-include ('VacancyDataMapper.php');
+include ('models/DAL/VacancyDataMapper.php');
 
 
 ?>
@@ -40,14 +40,14 @@ if(is_array($results))
 
 	foreach($results as $result)
 {
-	$id    = $result->Id;
+	$id    = $result->CustomerId;
 	$fname = $result->FirstName;
 	$lname = $result->LastName;
-	$cno   = $result->Phone;
+	$cno   = $result->ContactNumber;
 	$email = $result->Email;
 
 }
-echo "id :".$id ;
+//echo "id :".$CustomerId ;
 
 
 }
@@ -141,7 +141,7 @@ document.getElementById('element_id').style.background-image = 'images/home/slid
 	<textarea name="Reference" rows="7" cols="40" style="width: 400px"></textarea>
 	</td> </tr> <tr> <td colspan="2" style="text-align: center;"><br/>
 	<script src="#" type="text/javascript"></script>
-	<input name="skip_submit" type="submit" value="Send Application" />
+	<input name="send" type="submit" value="Send Application" />
 	</td> </tr>
 	</table>
 	</form>

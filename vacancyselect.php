@@ -103,28 +103,26 @@
 
 
 <?php
-include_once ("connection.php");
+include ("models/DAL/connection.php");
+include ("models/DAL/command.php");
+include ("models/DAL/VacancyDataMapper.php");
 
-try {
-    //$host = "localhost";
-    //$dbname = "test";
-  
-    $pdo = new PDO ("mysql:host=localhost;dbname=test");
-    $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
-} catch(PDOException $e){
-    die("ERROR: Could not connect. " . $e->getMessage());
-}
-$query = $pdo->prepare("select jobTitle, jobDescription FROM vacancy");
-$query->execute();
-while($vacancy = $query->fetch()){
-echo $vacancy['jobTitle'] . "<br>" . "<br>";
-echo $vacancy['jobDescription'];
+$Conn = new Connection();
+$Comm = new Command();
+$VacancyDataMapper = new  VacancyDataMapper();
+
+
+$results = $VacancyDataMapper->GetJobs($Conn, $Comm);
+
+foreach ($results as $R){
+	echo '<div> <a href="jobdescription.php?Id='.$R->vacancyId.'" > ' .$R ->jobTitle.   '</a> </div>';
+	
 }
 
-      unset($pdo); 
-      unset($query);
+
 
 ?>
+
 
 <form action = "jobapplicationform.php" method = "post">
            

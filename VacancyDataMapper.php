@@ -12,7 +12,13 @@ class VacancyDataMapper{
             $stmt->bindParam(1 , $Vacancy->jobTitle , PDO::PARAM_STR);
             $stmt->bindParam(2 , $Vacancy->jobDescription  , PDO::PARAM_STR);
             $stmt->execute();
-            return true;
+            $num = $stmt -> rowCount();
+            if($num > 0){
+                return true;
+            }else{
+                return false;
+            }
+
 
            
         }catch(PDOException $e){
@@ -20,6 +26,18 @@ class VacancyDataMapper{
             return false;
             
        }
+    }
+
+    public function GetJobs($Conn, $Comm){
+        try{
+           $stmt = $Conn->Connect()->prepare($Comm->SelectAllVacancy);
+           $stmt->execute();
+           return $stmt->fetchAll();
+        }catch(PDOException $e){
+            return null;
+        }
+
+        
     }
 
     public function job($Conn,$Comm,$username){
@@ -34,6 +52,19 @@ class VacancyDataMapper{
                 echo 'ERROR: ' ."<br>" . $e->getMessage();
                 return false;
              }          
+    }
+
+    public function description($Conn, $Comm,$vacancyId){
+        try{
+            $stmt = $Conn->Connect()->prepare($Comm->SelectjobDescription);
+            $stmt->bindParam(1, $vacancyId, PDO::PARAM_INT);
+            $stmt->execute();
+            return $stmt->fetchAll();
+
+        }catch(PDOExecption $e){
+            return null;
+
+        }
     }
   
 }
