@@ -5,6 +5,7 @@
 			VALUES(:isConfirmed, :isLocked, :accountTypeId, :lastUpdate, :Username, :Password)";
 			var $CheckIfAccExists = "SELECT 1 from account WHERE Username = ? LIMIT 1";
 			var $CheckIfPassMatch = "SELECT 1 from account WHERE Username = ? and Password = ? LIMIT 1";
+			var $SqlConfirmed = "SELECT 1 from account WHERE Username = ? and isConfirmed = ? LIMIT 1";
 			var $SelectAccountId = "SELECT accountId from account WHERE Username = ?";
 			var $SqlUpdatePassword = "UPDATE account SET account.Password = ? WHERE accountId = ?";
 			var $SqlUpdateUserName = "UPDATE account SET Username = ? WHERE accountId = ?";
@@ -52,6 +53,19 @@
 			var $SqlSelectAddress = "SELECT addressId, address, postalCode, cityId FROM address WHERE addressId = :addressId";
 			var $SqlUpdateAddress = "UPDATE address set address = :address, postalCode = :postalCode, cityId = :cityId WHERE addressId = :addressId";
 		
+		// TESTIMONIAL
+			var $SqlInsertTestimony = "INSERT INTO testimony VALUES(?,?)";
+			var $SqlUpdateTestimony = "UPDATE testimony SET TestimonyText = ? WHERE Id = ?";
+			var $SqlSelectAllTestimonies = "SELECT * FROM testimony";
+			var $SqlSelectTestimonyById = "SELECT * FROM testimony WHERE Id = ?";
+
+		// SUPPORT TICKET
+			var $SqlCreateSupportTicket = "INSERT INTO ticket (AccountId,ServiceId,Email,Subject,Message,CreatedDate,HasResponse) 
+			VALUES(?,?,?,?,?,?,?)";
+			var $SqlSelectAllTickets = "SELECT * FROM ticket ORDER BY CreatedDate DESC";
+			var $SqlSelectTicketById = "SELECT * FROM ticket WHERE Id = ?";
+			var $SqlRespondByTicketId = "SELECT * FROM ticketresponse WHERE ticketId = ?";
+			var $SqlRespondToTicket = "INSERT INTO ticketresponse (ticketId, AccountId, Message, CreatedDate) VALUES(?,?,?,?)";
         public function __constructor(){
             
         }

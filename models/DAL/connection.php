@@ -1,6 +1,6 @@
 <?php
 class Connection{
-    var $dsn = 'mysql:host=localhost;dbname=testdb';
+    var $dsn = 'mysql:host=localhost;dbname=testdb2';
     public $pdo;
     public function __constructor(){
     }
