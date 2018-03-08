@@ -90,10 +90,10 @@ class CustomerDataMapper{
         }
     }
     
-    public function GetCustomer($CusId,$Conn,$Comm){
+    public function GetCustomer($CustId,$Conn,$Comm){
         try{
             $stmt = $Conn->Connect()->prepare($Comm->SQLSelectCustomer);
-            $stmt->bindValue(1, $CusId, PDO::PARAM_INT);
+            $stmt->bindValue(1, $CustId, PDO::PARAM_INT);
             $stmt->execute();
             return $stmt->fetch();
         }catch(PDOException $e){
@@ -101,7 +101,7 @@ class CustomerDataMapper{
             return 0;
         }
     }
-    public function GetCustomers($Customer,$Conn,$Comm){
+    public function GetCustomers($Conn,$Comm){
         try{
             $stmt = $Conn->Connect()->prepare($Comm->SQLSelectCustomers);
             $stmt->execute();
@@ -111,7 +111,7 @@ class CustomerDataMapper{
             return 0;
         }
     }
-    public function GetCustomerFirstAnLastName($AccId,$Conn,$Comm){
+    public function GetCustomerFirstAndLastName($AccId,$Conn,$Comm){
         try{
             $stmt = $Conn->Connect()->prepare($Comm->SQLCustomerFirstAndLastNameByAccId);
             $stmt->bindValue(1, $AccId, PDO::PARAM_INT);
