@@ -37,6 +37,8 @@ foreach($results as $result)
     $_contactno = $result->ContactNumber;
     $_email = $result->Email;
     $_lastupdate = $result->LastUpdate;
+    $image_data = $result->ProfilePicture;
+
 }
 
     if(isset($_POST["btnUpdate"]))
@@ -153,7 +155,7 @@ class Validate{
       <div class="col-md-5  toppad  pull-right col-md-offset-3 ">
         <A href="edit.html" >Logout</A>
        <br>
-<p class=" text-info"> <?php echo date('y/m/d') ?> </p>
+<p class=" text-info"> <?php echo date('d M Y ') ?> </p>
       </div>
         <div class="col-xs-12 col-sm-12 col-md-6 col-lg-6 col-xs-offset-0 col-sm-offset-0 col-md-offset-3 col-lg-offset-3 toppad" >
    
@@ -164,7 +166,8 @@ class Validate{
             </div>
             <div class="panel-body">
               <div class="row">
-                <div class="col-md-3 col-lg-3 " align="center"> <img alt="User Pic" src="" class="img-circle img-responsive"> </div>
+              <div   align="center"> <img alt="User Pic" src="data:image/jpeg;base64,<?php  echo base64_encode( $image_data); ?>" class="img-circle img-responsive" width ="250px"  />
+              </div>
                 
               
                 <div class=" col-md-9 col-lg-9 "> 
