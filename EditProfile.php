@@ -302,7 +302,7 @@ foreach($province as $provinces)
 
              
 <div>
-<form id="updateProfilePicture " action ="EditProfile.php " method ="post" enctype="multipart/form-data">
+<form id="updateProfilePicture " action ="Profile.php " method ="post" enctype="multipart/form-data">
 <input type="file" name="fileToUpload" id="fileToUpload" >
 </div>
 <br/>
@@ -311,7 +311,7 @@ foreach($province as $provinces)
               </div>
               <br/>
                 
-                <form id ="UpdateDetails"    action ="editProfile.php "  method="post">
+                <form id ="UpdateDetails"    action ="Profile.php "  method="post">
                 <div class=" col-md-9 col-lg-9 "> 
                    
                   <table class="table table-user-information">
