@@ -9,6 +9,11 @@ if(!isset($_SESSION['user'])){
 include ('models/DAL/Connection.php');
 include ('models/DAL/Command.php');
 include ('models/DAL/CustomerDataMapper.php');
+include ('models/DAL/ProvinceDataMapper.php');
+include ('models/DAL/CityDataMapper.php');
+include ('models/DAL/AddressDataMapper.php')
+
+
 ?>
 
 <?php 
@@ -21,8 +26,16 @@ $Comm = new Command();
 $validate = new validate();
 
 $custusername_datamaper = new CustomerDataMapper();
+$province_datamapper = new ProvinceDataMapper();
+$city_datamapper = new CityDataMapper();
+$address_datamapper = new AddressDataMapper();
+
+
 $results = $custusername_datamaper->GetCustomerbyUsername($username,$Conn, $Comm);
-// $id  = $custusername_datamaper-> GetCustomerID($username,$Conn, $Comm);
+$province = $province_datamapper->GetProvincies($Conn,$Comm); 
+$city  = $city_datamapper->GetCities($Conn,$Comm);
+
+
 $_Id;
 $UpdateUser;
 $_fname;
@@ -34,6 +47,7 @@ $image_data;
 
 foreach($results as $result)
 {
+    $_Id = $result->CustomerId;
     $_fname = $result->FirstName;
     $_lname = $result->LastName;
     $_contactno = $result->ContactNumber;
@@ -42,17 +56,58 @@ foreach($results as $result)
     $image_data = $result->ProfilePicture;
 }
 
+$country = $custusername_datamaper->GetCountry($Conn,$Comm);
+
+$countryname;
+$countryId;
+$city_id;
+
+foreach($country  as $Countries)
+{
+         $countryId = $Countries->countryId;
+         $countryname = $Countries->country;
+
+}
+$provinceId;
+$provincename;
+
+foreach($province as $provinces)
+{
+    $provinceId = $provinces->provinceId;
+    $provincename = $provinces->province;
+
+}
+
 
     if(isset($_POST["btnUpdate"]))
     {
-
+        
         $FirstName = $validate->GetFirstName();
         $LastName = $validate->GetLastName();
         $ContactNumber = $validate->GetContactNumber();
         $email = $validate->GetEmail();
+        $address = $validate->GetAddress();
+        $postalcode = $validate->GetPostalCode();
+        $cityId=$_POST['city'];
+        $CustomerId = $_Id;
+        echo "<script>
+        function run() {
+            document.getElementById('srt').value = document.getElementById('city').value;
+        }
+    </script>";
+
+
         $UpdateUser = $custusername_datamaper->UpdateUserDetails($Conn,$Comm,$FirstName,$LastName,$ContactNumber,$email);
+
+        $UpdateAddress = $address_datamapper->UpdateAddress($address,$postalcode,$cityId,$CustomerId,$Conn,$Comm);
        
-         header("Location: profile.php");
+       
+
+        echo "customerid:".$CustomerId;
+        echo"cityid;".$_POST["city"];
+
+
+        //  header("Location: profile.php");
     }
     else{
     //      echo '<div class="alert">
@@ -81,6 +136,7 @@ foreach($results as $result)
                 return (filesize($file_name));
             }
 
+         
            
             $path = $_FILES['fileToUpload']['name'];
             $path2 =$_FILES['fileToUpload']['tmp_name'];
@@ -104,7 +160,8 @@ foreach($results as $result)
                      echo '<div class="alert">
                      <span class="closebtn" onclick="this.parentElement.style.display=none;">&times;</span> 
                  <strong>Danger!</strong> must be animage.
-             </div>';         
+             </div>';   
+           
 
                 }
                  else{
@@ -146,13 +203,19 @@ foreach($results as $result)
                 return filter_var($_POST["lname"], FILTER_SANITIZE_STRING);
             }
             public function GetEmail(){
-                return filter_var($_POST["Email"], FILTER_SANITIZE_EMAIL);
+                return filter_var($_POST["Email"], FILTER_SANITIZE_STRING);
             }
             public function GetContactNumber(){
                 return filter_var($_POST["contactno"],FILTER_SANITIZE_STRING);
             }
             public function GetPictutre(){
                 return filter_var($_FILES["fileToUpload"],FILTER_SANITIZE_BLOB);
+            }
+            public function GetAddress(){
+                return filter_var($_POST["address"], FILTER_SANITIZE_STRING);
+            }
+            public function GetPostalCode(){
+                return filter_var($_POST["postalcode"], FILTER_SANITIZE_STRING);
             }
 }
 
@@ -240,7 +303,7 @@ foreach($results as $result)
              
 <div>
 <form id="updateProfilePicture " action ="EditProfile.php " method ="post" enctype="multipart/form-data">
-<input type="file" name="fileToUpload" id="fileToUpload">
+<input type="file" name="fileToUpload" id="fileToUpload" >
 </div>
 <br/>
             <input type ="submit" class="btn btn-warning" id="btnimage" name ="btnimage" value ="Change image" >
@@ -255,7 +318,7 @@ foreach($results as $result)
                     <tbody>
                       <tr>
                         <td>First Name:</td>
-                        <td> <input type ="text" value ="<?php  echo $_fname?> "  name ="fname"  ></td>
+                        <td> <input type ="text" value ="<?php  echo  $_fname ?> "  name ="fname"  ></td>
                       </tr>
                       <tr>
                         <td>Last Name:</td>
@@ -268,19 +331,71 @@ foreach($results as $result)
                              echo "Please update Number";
                          }
                          else
-                         echo $_contactno    ?> " name ="contactno" >     
+                         echo $_contactno ?> " name ="contactno" >     
                          
                           </td>
                       </tr>
-                   
+                    
                       </tr>
                          <tr>
                              <tr>
                         <td>Email</td>
-                        <td>      <input type ="text" value ="<?php  echo $_email ?> "  name ="Email" >  </a></td>
-                        <tr>
-                        <!-- <td>Home Address</td>
-                        <td> <?php  echo $_email ?> </td> -->
+                        <td>  <input type ="text" value ="<?php  echo  $_email?> "  name="Email"  >  </td>
+                      </tr>
+
+                       <tr>
+                        <td> Country </td>
+                        <td> 
+                        <select id ="county" name ="country"> 
+                        <option value="">---Select Country--</option>
+
+                        <?php 
+                        foreach($country  as $Countries){?>
+                        <option  Value = "<?php $Countries->countryId ?>" > <?php echo $Countries->country ?> </option>
+                    
+                        <?php } ?>
+                        </select>
+                        </td>
+                      </tr>
+                      <tr>
+                             <tr>
+                        <td>Address</td>
+                        <td>  <input type ="text" value ="<?php  echo  $_email?> "  name="address"  >  </td>
+                      </tr>
+                      <tr>
+                             <tr>
+                        <td>Postal Code</td></td>
+                        <td>  <input type ="text" value ="<?php  echo  $_email?> "  name="postalcode"  >  </td>
+                      </tr>
+                      <tr>
+                        <td> City </td>
+                        <td> 
+                        <select id ="city" name ="city" onchannge="getid()";>
+                        <option value="">---Select City--</option>
+                        <?php 
+
+                        foreach($city  as $Cities){?>
+                        <option  Value = "<?php $Cities->cityId ?>" > <?php echo $Cities->city ?> </option>
+                        
+                        <?php } ?>
+                        </select>
+                        </td>
+                      </tr>
+                      <tr>
+                        <td> Province </td>
+                        <td> 
+                        <select id ="province" name ="province"> 
+                        <option value="">---Select Province--</option>
+
+                        <?php 
+                        foreach($province  as $provinces){?>
+                        <option  Value = "<?php $provinces->provinceId ?>" > <?php echo $provinces->province ?> </option>
+                        <?php } ?>
+                        </select>
+                        <?php 
+                        echo $_REQUEST["province"] ;
+                        ?>
+                        </td>
                       </tr>
                       <tr>
                         <td>Last Date of Modification</td>
@@ -291,6 +406,7 @@ foreach($results as $result)
                         </td>
                            
                       </tr> 
+                    
                      
                     </tbody>
 
@@ -323,42 +439,38 @@ for (i = 0; i < close.length; i++) {
 }
 </script>
 
-
 <script>
-function deleletconfig(){
-
-var del=confirm("Are you sure you want to delete this record?");
-if (del==true){
-   alert ("record deleted")
-}
-return del;
+var picfile =$("#fileUpload")[0].file.length;
+if(picfile === 0)
+{
+    alert("no file selected");
 }
 </script>
 
-//add onclick event
-onclick="return deleletconfig()"
 
 
-
-
-
- <!-- <script>
-function myFunction() {
-    var txt;
-    var r = confirm("Are You sure You want to Submit");
-    if (r == true) {
-        txt = "You pressed OK!";
-
-
-
-    } else {
-        txt = "You pressed Cancel!";
+<script>
+function deleletconfig(){
+    if( document.getElementById("fileToUpload").files.length == 0 ){
+        alert ("cannot update without record")
+        else
+        return true;
+}
+}
+</script>
+<script>
+    function getid()
+    {
+        var e = document.getElementById('city').value;
+        alert(e);
     }
-    document.getElementById("demo").innerHTML = txt;
+<script>
+<script>
 
-} -->
 
 
-<!-- </script> --> -->
+
+
+
 </body>
 </html>
