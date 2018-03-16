@@ -35,7 +35,6 @@ $results = $custusername_datamaper->GetCustomerbyUsername($username,$Conn, $Comm
 $province = $province_datamapper->GetProvincies($Conn,$Comm); 
 $city  = $city_datamapper->GetCities($Conn,$Comm);
 
-
 $_Id;
 $UpdateUser;
 $_fname;
@@ -44,6 +43,8 @@ $_contactno;
 $_email;
 $_lastupdate;
 $image_data;
+$userImage;
+$defaultImage = 'images/logo/Face_holder.gif';
 
 foreach($results as $result)
 {
@@ -54,6 +55,7 @@ foreach($results as $result)
     $_email = $result->Email;
     $_lastupdate = $result->LastUpdate;
     $image_data = $result->ProfilePicture;
+    
 }
 
 $country = $custusername_datamaper->GetCountry($Conn,$Comm);
@@ -90,6 +92,7 @@ foreach($province as $provinces)
         $postalcode = $validate->GetPostalCode();
         $cityId=$_POST['city'];
         $CustomerId = $_Id;
+
         echo "<script>
         function run() {
             document.getElementById('srt').value = document.getElementById('city').value;
@@ -109,13 +112,7 @@ foreach($province as $provinces)
 
         //  header("Location: profile.php");
     }
-    else{
-    //      echo '<div class="alert">
-    //         <span class="closebtn" onclick="this.parentElement.style.display=none;">&times;</span> 
-    //         <strong>Danger!</strong> Something went wrong while updating please try again after 5 minutes.
-    //    </div>';
-        }
-
+  
 
 //Update Customer Profile Picture
             if(isset($_POST["btnimage"]) && isset($_FILES['fileToUpload'] ))
@@ -140,31 +137,12 @@ foreach($province as $provinces)
            
             $path = $_FILES['fileToUpload']['name'];
             $path2 =$_FILES['fileToUpload']['tmp_name'];
-            $ext = end(get_file_extension1($path));
+            $tmp = explode('.', $path );
+            $ext = end($tmp);
          
             $filesize = getfilesize($path2);
             $ProfilePircture = file_get_contents($_FILES['fileToUpload']['tmp_name']);
 
-                if($filesize > 2097152)
-                {
-                    echo '<div class="alert">
-                    <span class="closebtn" onclick="this.parentElement.style.display=none;">&times;</span> 
-                <strong>Danger!</strong> please select a photo with ext PNG/JPG/GIF with size smaller than 2MB .
-            </div>';   
-                    
-                }
-                else
-                {
-                if($ext == 'PNG' || $ext == 'Png' || $ext == 'jpeg' || $ext == 'JPEG' || $ext == 'GIF' || $ext == 'gif'  )
-                 {
-                     echo '<div class="alert">
-                     <span class="closebtn" onclick="this.parentElement.style.display=none;">&times;</span> 
-                 <strong>Danger!</strong> must be animage.
-             </div>';   
-           
-
-                }
-                 else{
                     $Email = $_email;
                     $UpdatePicture = $custusername_datamaper->UpdateUserProfilePicture($Conn,$Comm,$Email,$ProfilePircture);
             
@@ -179,20 +157,11 @@ foreach($province as $provinces)
                     <strong>Danger!</strong> Something went wrong while updating please try again after 5 minutes.
                 </div>';         
                     }
-
+                     
+                //   }
                 }
-                   
-    
-                 }
-                }
-
-              
-                   
-
-            //  } 
-    
             
-
+        
         class Validate{
             public function __construct(){
             }
@@ -259,20 +228,21 @@ foreach($province as $provinces)
 		 <link rel="icon" type="image/png" sizes="56x56" href="images/fav-icon/icon.png"> 
         <link rel="stylesheet" type="text/css" href="css/style1.css"> 
         <!-- <link rel="stylesheet" type="text/css" href="css/style.css">    -->
+        <link rel="stylesheet" type="text/css" href="css/navbar.css"> 
 
         <script type="text/javascript" src="vendor/jquery.2.2.3.min.js"></script>
         <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.0/jquery.min.js"></script>
         <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
         <script type="text/javascript" src="js/v.js"></script>
      
-
         <link href="//netdna.bootstrapcdn.com/bootstrap/3.1.0/css/bootstrap.min.css" rel="stylesheet" id="bootstrap-css">
         <script src="//netdna.bootstrapcdn.com/bootstrap/3.1.0/js/bootstrap.min.js"></script>
         <script src="//code.jquery.com/jquery-1.11.1.min.js"></script> 
 
 
 </head>
-<body>
+<body style="background:url('images/logo/images.jpg')  background-repeat:norepeat">
+
 <div class="div-label-span div-margin-bottom-5px">
             <!-- Logo -->
 				<div class="logo float-left tran4s" style="background-color:#00d747;margin-top:-20px;padding:2%;">
@@ -280,6 +250,13 @@ foreach($province as $provinces)
                             <img src="images/logo/logo_white.png" width="200" alt="Logo">
                         </a>
                     </div>
+                    <div class="sidenav">
+  <a href="#">About</a>
+  <a href="#">My Services</a>
+  <a href="#">Add Service </a>
+  <a href="#">Support</a>
+</div>
+                  
             <div><h2>Edit Profile</h2></div>
         </div>
 <div class="container">
@@ -302,16 +279,16 @@ foreach($province as $provinces)
 
              
 <div>
-<form id="updateProfilePicture " action ="Profile.php " method ="post" enctype="multipart/form-data">
+<form id="updateProfilePicture " action ="EditProfile.php " method ="POST" enctype="multipart/form-data">
 <input type="file" name="fileToUpload" id="fileToUpload" >
 </div>
 <br/>
-            <input type ="submit" class="btn btn-warning" id="btnimage" name ="btnimage" value ="Change image" >
-            </form>
+            <input type ="submit" class="btn btn-warning" id="btnimage" name ="btnimage" value ="Change image" onclick = "ValidateFileUpload(event)";  >
+            <!-- </form> -->
               </div>
               <br/>
                 
-                <form id ="UpdateDetails"    action ="Profile.php "  method="post">
+                <!-- <form id ="UpdateDetails"    action ="Profile.php "  method="post"> -->
                 <div class=" col-md-9 col-lg-9 "> 
                    
                   <table class="table table-user-information">
@@ -370,7 +347,7 @@ foreach($province as $provinces)
                       <tr>
                         <td> City </td>
                         <td> 
-                        <select id ="city" name ="city" onchannge="getid()";>
+                        <select id ="city" name ="city">
                         <option value="">---Select City--</option>
                         <?php 
 
@@ -411,7 +388,7 @@ foreach($province as $provinces)
                     </tbody>
 
                   </table>
-                  <input  id = "btnUpdate" type ="submit" class="btn btn-warning" value = "Save Cahnges" name = "btnUpdate">
+                  <input  id = "btnUpdate" type ="submit" class="btn btn-warning" value = "Save Cahnges" name = "btnUpdate" onclick = "getid()";>
 
                 </div>
                 </form>
@@ -440,37 +417,84 @@ for (i = 0; i < close.length; i++) {
 </script>
 
 <script>
+    function getlength(){
 var picfile =$("#fileUpload")[0].file.length;
 if(picfile === 0)
 {
     alert("no file selected");
 }
+
+    }
+
 </script>
 
 
 
 <script>
-function deleletconfig(){
+function deleletconfig(event){
+  
     if( document.getElementById("fileToUpload").files.length == 0 ){
         alert ("cannot update without record")
-        else
-        return true;
+        event.preventDefault();
+
 }
 }
 </script>
 <script>
     function getid()
     {
-        var e = document.getElementById('city').value;
+        var e = document.getElementById('city').text;
         alert(e);
     }
-<script>
-<script>
+</script>
+
+<SCRIPT type="text/javascript">
+    function ValidateFileUpload(even) {
+        var fuData = document.getElementById('fileToUpload');
+        var FileUploadPath = fuData.value;
+
+//To check if user upload any file
+        if (FileUploadPath == '') {
+            alert("Please upload an image");
+             event.preventDefault();
+
+        } else {
+            var Extension = FileUploadPath.substring(
+                    FileUploadPath.lastIndexOf('.') + 1).toLowerCase();
+
+//The file uploaded is an image
+
+if (Extension == "gif" || Extension == "png" || Extension == "bmp"
+                    || Extension == "jpeg" || Extension == "jpg") {
+
+// To Display
+                if (fuData.files && fuData.files[0]) {
+                    var reader = new FileReader();
+
+                    reader.onload = function(e) {
+                        $('#blah').attr('src', e.target.result);
+                    }
+
+                    reader.readAsDataURL(fuData.files[0]);
+                }
+
+            } 
+
+//The file upload is NOT an image
+else {
+                alert("Photo only allows file types of GIF, PNG, JPG, JPEG and BMP. ");
+                event.preventDefault();
+
+
+            }
+        }
+    }
+</SCRIPT>
 
 
 
-
-
+        
+    
 
 </body>
 </html>
