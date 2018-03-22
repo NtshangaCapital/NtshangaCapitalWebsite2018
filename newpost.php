@@ -7,17 +7,13 @@ include ('models/DAL/Command.php');
 include ('models/DAL/ArticleDataMapper.php');
 include ('models/article.php');
 
-if(!isset($_GET['pid'])){
-    header("Location: blogdetails.php");
-}
-$pid =$_GET['pid'];//get the article id
 
 $Con = new Connection();
 $Comm = new Command();
 
 $article_datamaper = new ArticleDataMapper();
 
-if (isset($_POST['update'])){
+if (isset($_POST['post'])){
 
 $title =$_POST['title'];
 $description = $_POST['content'];
@@ -25,9 +21,7 @@ $description = $_POST['content'];
 $file =  ($_FILES['image']['tmp_name']);
 
 $date = date("Y-m-d");
-$result=$article_datamaper->UpdateArticle($title,$description,$file,$date,$Con,$Comm);
-
-
+$result=$article_datamaper->SaveArticle($title,$description,$file,$date,$Con,$Comm);
 
 //create article object
 // $Article = new Article($title, $description, $file, $date);
@@ -39,18 +33,6 @@ $result=$article_datamaper->UpdateArticle($title,$description,$file,$date,$Con,$
 	}	
 
 }
-
-$Conn = new Connection();
-$Comm = new Command();
-$blogmapper = new ArticleDataMapper();
- $Article = $blogmapper->GetArticle($pid, $Conn,$Comm);
-            //print_r($results);
-            
-                
-                $title = $Article->title;
-                $content = $Article->description;
-                $image = $Article->image;
-                $time = $Article->date;
 
 ?>
 
@@ -88,27 +70,23 @@ $blogmapper = new ArticleDataMapper();
                             <img src="images/logo/logo_white.png" width="200" alt="Logo">
                         </a>
                 </div>    
-            <?php
-            
-           
-
-			echo "<form action='' method='update' enctype='multipart/form-data' display:flex;>
+			
+			<form action="" method="post" enctype="multipart/form-data" display:flex;>
 			<h2>Please write your article</h2>
 
-			<input placeholder='Title' name='title' type='text' value= '$title' autofocus size='48'>
+			<input placeholder="Title" name="title" type="text" autofocus size="48">
 			<hr><br /><br />
 			<div>
-			<input type='file' name='image' value= '' ><hr>
+			<input type="file" name="image"><hr>
 			</div>
 			<div>
-			<textarea class='ckeditor' placeholder='Content' name='content' rows='20' cols='50'> $content</textarea>
+			<textarea class="ckeditor" placeholder="Content" name="content" rows="20" cols="50"></textarea>
 			<hr><br />
-            
+            <!--<input type="date" name="date"><label><strong> Date of article</strong></label><hr>-->
 			</div>
 
-			<input name='post' type='submit' value='Post' width='50px'/>
+			<input name="post" type="submit" value="Post" width="50px"e/>
 				
-            </form>";
-            ?>
+	</form>
 </body>
 </html>

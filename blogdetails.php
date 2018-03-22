@@ -1,6 +1,22 @@
 <?php
 session_start();
 
+//$_SESSION['username']
+//header('Content-type: image/jpg');
+
+// if(!isset($_SESSION['username'])){
+
+//     header("Location: login.php");
+//     return;
+// }
+
+if(!isset($_GET['pid'])){
+    header("Location: blogdetails.php");
+}
+$pid =$_GET['pid'];
+
+
+
 include ("models/DAL/connection.php");
 include ("models/DAL/command.php");
 include ("models/DAL/ArticleDataMapper.php");
@@ -9,27 +25,22 @@ $Conn = new Connection();
 $Comm = new Command();
 $article_datamapper = new  ArticleDataMapper();
 
-$results = $article_datamapper->GetArticles($Conn,$Comm);
+$Article = $article_datamapper->GetArticle($pid, $Conn,$Comm);
 //print_r($results);
-foreach($results as $row){
+
     
-    $id = $row->aticleId;
-    $title = $row->title;
-    $content = $row->description;
-    $image = $row->image;
-    $time = $row->date;
-
-}
-
-$admin = "<div><a href='del_post.php?pid=$id'>Delete</a> &nbsp;<a href='edit.php?pid=$id'>Edit</a></div>";
+    $title = $Article->title;
+    $content = $Article->description;
+    $image = $Article->image;
+	$time = $Article->date;
+	
+	$admin = "<div><a class='tran3s' href='del_post.php?pid=$pid'>Delete</a> &nbsp;<a class='tran3s' href='edit.php?pid=$pid'>Edit</a></div>";
 ?>
-
-
 
 <!DOCTYPE html>
 <html lang="en">
 	
-<!-- Mirrored from creativegigs.net/html/gullu/blog-v1.html by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 12 Oct 2017 14:43:31 GMT -->
+<!-- Mirrored from creativegigs.net/html/gullu/blog-details.html by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 12 Oct 2017 14:44:40 GMT -->
 <head>
 		<meta charset="UTF-8">
 		<!-- For IE -->
@@ -38,7 +49,7 @@ $admin = "<div><a href='del_post.php?pid=$id'>Delete</a> &nbsp;<a href='edit.php
 		<!-- For Resposive Device -->
 		<meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-		<title>Blog </title>
+		<title>Gullu - Agency &amp; Startup HTML Template</title>
 
 		<!-- Favicon -->
 		<link rel="icon" type="image/png" sizes="56x56" href="images/fav-icon/icon.png">
@@ -57,12 +68,17 @@ $admin = "<div><a href='del_post.php?pid=$id'>Delete</a> &nbsp;<a href='edit.php
 			<script src="vendor/html5shiv.js"></script>
 			<script src="vendor/respond.js"></script>
 		<![endif]-->
+		<script src="https://ajax.googleapis.com/ajax/libs/jquery/2.2.0/jquery.min.js"></script>
+		<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css" />
+		<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js"></script>
+		
 
 			
 	</head>
 
 	<body>
 		<div class="main-page-wrapper">
+
 
 
 			<!-- 
@@ -91,34 +107,17 @@ $admin = "<div><a href='del_post.php?pid=$id'>Delete</a> &nbsp;<a href='edit.php
 						   <div class="collapse navbar-collapse" id="navbar-collapse-1">
 								<ul class="nav">
 									<li class="dropdown-holder menu-list"><a href="index.html" class="tran3s">Home</a>
-										<ul class="sub-menu">
-											<li><a href="index.html">Home version one</a></li>
 										
-
-										</ul>
 									</li>
-									<li class="dropdown-holder menu-list active"><a href="#" class="tran3s">Pages</a>
-										<ul class="sub-menu">
-											
-											<li><a href="about-us.html">About us</a></li>
-											
-										</ul>
+									<li class="dropdown-holder menu-list active"><a href="blogindex.php" class="tran3s">Blog</a>
 									</li>
 									<li class="dropdown-holder menu-list"><a href="#" class="tran3s">Services</a>
-										<ul class="sub-menu">
-											<li><a href="service-v1.html">Service Version One</a></li>
-											
-										</ul>
+										
 									</li>
 									<li class="dropdown-holder menu-list"><a href="#" class="tran3s">Portfolio</a>
 										<ul class="sub-menu">
-											<li><a href="portfolio-v1.html">Portfolio version one</a></li>
-										
-											<li class="dropdown-holder"><a href="portfolio-v3.html">Portfolio version Three</a>
-												<ul class="second-sub-menu">
-													<li><a href="portfolio-details.html">Portfolio Details</a></li>
-												</ul>
-											</li>
+											
+											
 										</ul>
 									</li>
 									<li class="menu-list"><a href="contact.html" class="tran3s">Contact Us</a></li>
@@ -137,11 +136,11 @@ $admin = "<div><a href='del_post.php?pid=$id'>Delete</a> &nbsp;<a href='edit.php
 			-->
 			<div class="inner-page-banner">
 				<div class="opacity">
-					<h1>Our New Blogs</h1>
+					<h1>Single News</h1>
 					<ul>
 						<li><a href="index.html">Home</a></li>
 						<li>/</li>
-						<li>Blog</li>
+						<li>News</li>
 					</ul>
 				</div> <!-- /.opacity -->
 			</div> <!-- /inner-page-banner -->
@@ -150,32 +149,62 @@ $admin = "<div><a href='del_post.php?pid=$id'>Delete</a> &nbsp;<a href='edit.php
 
 			<!-- 
 			=============================================
-				Our Blog / Blog V1
+				Blog Details
 			============================================== 
 			-->
-			<div class="our-blog blog-v1">
-				<div class="container">
-					<div class="blog-masonary row">
-						<div class="grid-sizer"></div>
-                        <?php
-                            foreach($results as $row){
-							
-                                printf('<div class="grid-item">
-                                    <div class="single-blog">
-                                        <div class="image"><img src="images/blog/2.jpg" alt=""></div>
-                                        <div class="text">
-                                            <h6>Admin.</h6>
-                                            <h5><a href="blogdetails.php?pid=%u" class="tran3s color-two"><span>%s </span></a></h5>
-											<a href="blogdetails.php?pid=%u" class="tran3s"><i class="flaticon-arrows" aria-hidden="true"></i></a>
-                                        </div>
-                                    </div> 
-								</div>',$row->aticleId, $row->title, $row->aticleId, $row->aticleId, $row->title, $row->aticleId);
+			<div>
+			<div   align="center"> <img alt="User Pic" src="data:image/jpeg;base64,<?php  echo base64_encode( $image); ?>" class="img-square img-responsive" width ="250px"  />
+			</div>
+			<?php
+			echo "<div class='blog-details blog-v3'>
+				<div class='container'>
+					<div class='wrapper'>
+						<div class='blog-main-post'>
+						<div   align='center'> 
+							<h6>Admin. </h6>
+							<h3>$title</h3>
+							<p>$content</p>
+							$admin
+						</div> 
+						"; 
+			?>			
+						
+					</div> <!-- /.wrapper -->
+				</div> <!-- /.container -->
+
+				<div class="comment-area">
+					<div class="container">
+						<div class="wrapper">
+							<div class="comment-section">
+							</div> 
+							<div id="disqus_thread"></div>
+							<script>
+								/**
+								*  RECOMMENDED CONFIGURATION VARIABLES: EDIT AND UNCOMMENT THE SECTION BELOW TO INSERT DYNAMIC VALUES FROM YOUR PLATFORM OR CMS.
+								*  LEARN WHY DEFINING THESE VARIABLES IS IMPORTANT: https://disqus.com/admin/universalcode/#configuration-variables
+								*/
 								
-							}
-						
-                        ?> 
-						</div>
-						
+								var disqus_config = function () {
+									var id = <?php echo $pid; ?>;
+									this.page.url = 'http://localhost/NtshangaCapital/blogdetails.php?pid='+id;  // Replace PAGE_URL with your page's canonical URL variable
+									this.page.identifier = id; // Replace PAGE_IDENTIFIER with your page's unique identifier variable
+								};
+								
+								(function() {  // REQUIRED CONFIGURATION VARIABLE: EDIT THE SHORTNAME BELOW
+									var d = document, s = d.createElement('script');
+									
+									s.src = 'https://ntshangacapital-co-za.disqus.com/embed.js';  // IMPORTANT: Replace EXAMPLE with your forum shortname!
+									
+									s.setAttribute('data-timestamp', +new Date());
+									(d.head || d.body).appendChild(s);
+								})();
+							</script>
+							<noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript" rel="nofollow">comments powered by Disqus.</a></noscript>
+
+							
+			</div> <!-- /.blog-details -->
+			
+			
 
 			
 			<!-- 
@@ -233,7 +262,7 @@ $admin = "<div><a href='del_post.php?pid=$id'>Delete</a> &nbsp;<a href='edit.php
 							<li><h3><span class="timer p-color" data-from="0" data-to="53701" data-speed="5000" data-refresh-interval="50">0</span> Members</h3></li>
 							<li><h3><span class="timer p-color" data-from="0" data-to="1110" data-speed="5000" data-refresh-interval="50">0</span> Shops</h3></li>
 						</ul>
-						<p class="float-left">&copy; 2017 <a href="#" class="tran3s p-color">Ntshangacapital</a>. All rights reserved</p>
+						<p class="float-left">&copy; 2017 <a href="#" class="tran3s p-color">CreativeGigs</a>. All rights reserved</p>
 					</div>
 				</div> <!-- /.container -->
 			</footer>
@@ -304,9 +333,6 @@ $admin = "<div><a href='del_post.php?pid=$id'>Delete</a> &nbsp;<a href='edit.php
 		<!-- Fancybox -->
 		<script type="text/javascript" src="vendor/fancybox/dist/jquery.fancybox.min.js"></script>
 		<script type="text/javascript" src="vendor/jquery.ripples-master/dist/jquery.ripples-min.js"></script>
-		<!-- Masonary js -->
-		<script type="text/javascript" src="vendor/masonry.pkgd.min.js"></script>
-
 		<!-- Query Loader -->
 		<script src="vendor/queryloader/queryLoader3.js" type="text/javascript"></script>
 
@@ -314,11 +340,10 @@ $admin = "<div><a href='del_post.php?pid=$id'>Delete</a> &nbsp;<a href='edit.php
 		<!-- Theme js -->
 		<script type="text/javascript" src="js/theme.js"></script>
 
-		<!--disqus-->
-		<script id="dsq-count-scr" src="//www-ntshangacapital-co-za.disqus.com/count.js" async></script>
-
 		</div> <!-- /.main-page-wrapper -->
+		<script id="dsq-count-scr" src="//www-ntshangacapital-co-za.disqus.com/count.js" async></script>
+		<script async>(function(s,u,m,o,j,v){j=u.createElement(m);v=u.getElementsByTagName(m)[0];j.async=1;j.src=o;j.dataset.sumoSiteId='6859d1f4147572051cc7d4e11b2a2e632671ae9a16198415b202ae7910917d05';v.parentNode.insertBefore(j,v)})(window,document,'script','//load.sumo.com/');</script>
 	</body>
 
-<!-- Mirrored from creativegigs.net/html/gullu/blog-v1.html by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 12 Oct 2017 14:43:58 GMT -->
+<!-- Mirrored from creativegigs.net/html/gullu/blog-details.html by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 12 Oct 2017 14:44:43 GMT -->
 </html>
